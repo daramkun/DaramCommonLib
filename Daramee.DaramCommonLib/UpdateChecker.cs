@@ -15,6 +15,8 @@ namespace Daramee.DaramCommonLib
 	{
 		string _versionFormat;
 
+		string newestVersion = null;
+
 		public string UpdateURL { get { return $"https://github.com/{ProgramHelper.GitHubAuthor}/{ProgramHelper.GitHubRepositoryName}/releases"; } }
 
 		public UpdateChecker ( string versionFormat )
@@ -22,11 +24,21 @@ namespace Daramee.DaramCommonLib
 			_versionFormat = versionFormat;
 		}
 
-		public async Task<bool?> CheckUpdate ()
+		public string ThisVersion
 		{
+			get
+			{
+				Version currentVersion = ProgramHelper.ApplicationVersion;
+				return string.Format ( _versionFormat, currentVersion.Major, currentVersion.Minor, currentVersion.Build, currentVersion.Revision );
+			}
+		}
+
+		public async Task<string> GetNewestVersion ( bool forceCheck = false )
+		{
+			if ( newestVersion != null && !forceCheck )
+				return newestVersion;
+
 			Stream stream = null;
-			string version = null;
-			bool checkUpdate = false;
 			try
 			{
 				HttpWebRequest req = WebRequest.CreateHttp ( UpdateURL );
@@ -39,20 +51,26 @@ namespace Daramee.DaramCommonLib
 				{
 					stream = null;
 					string text = reader.ReadToEnd ();
+
 					int begin = text.IndexOf ( "<span class=\"css-truncate-target\">" );
-					if ( begin == -1 ) { version = null; } else begin += "<span class=\"css-truncate-target\">".Length;
+					if ( begin == -1 ) { return null; }
+					else begin += "<span class=\"css-truncate-target\">".Length;
+
 					int end = text.IndexOf ( "</span>", begin );
-					if ( end == -1 ) { version = null; };
-					version = text.Substring ( begin, end - begin );
-					Version currentVersion = ProgramHelper.ApplicationVersion;
-					string current = string.Format ( _versionFormat, currentVersion.Major, currentVersion.Minor, currentVersion.Build, currentVersion.Revision );
-					checkUpdate = version != current;
+					if ( end == -1 ) { return null; };
+
+					return newestVersion = text.Substring ( begin, end - begin );
 				}
 			}
-			catch { version = null; return null; }
+			catch { return newestVersion = null; }
 			finally { if ( stream != null ) stream.Dispose (); }
+		}
 
-			return checkUpdate;
+		public async Task<bool?> CheckUpdate ()
+		{
+			string newest = await GetNewestVersion ( true );
+			if ( newest == null ) return false;
+			return newest != ThisVersion;
 		}
 
 		public void ShowDownloadPage ()
