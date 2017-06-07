@@ -86,9 +86,9 @@ namespace Daramee.DaramCommonLib
 		public void Notify ( string title, string text, NotifyType type )
 		{
 			if ( !IsEnabledNotification ) return;
-			int time = ( int ) initializer.ExpirationTime?.Offset.TotalSeconds;
-			if ( time <= 0 )
-				time = 10;
+			int time = 10;
+			if ( initializer.ExpirationTime != null )
+				time = ( int ) initializer.ExpirationTime?.Offset.TotalSeconds; ;
 			notifyIcon.ShowBalloonTip ( time, title, text, ConvertIcon ( type ) );
 		}
 
@@ -151,17 +151,28 @@ namespace Daramee.DaramCommonLib
 		{
 			switch ( type )
 			{
-				case NotifyType.Warning: return new Uri ( Path.GetFullPath ( initializer.WarningTypeImagePath ) ).AbsoluteUri;
-				case NotifyType.Information: return new Uri ( Path.GetFullPath ( initializer.InformationTypeImagePath ) ).AbsoluteUri;
-				case NotifyType.Error: return new Uri ( Path.GetFullPath ( initializer.ErrorTypeImagePath ) ).AbsoluteUri;
-				case NotifyType.CustomType1: return new Uri ( Path.GetFullPath ( initializer.CustomTypeImagePath1 ) ).AbsoluteUri;
-				case NotifyType.CustomType2: return new Uri ( Path.GetFullPath ( initializer.CustomTypeImagePath2 ) ).AbsoluteUri;
-				case NotifyType.CustomType3: return new Uri ( Path.GetFullPath ( initializer.CustomTypeImagePath3 ) ).AbsoluteUri;
-				case NotifyType.CustomType4: return new Uri ( Path.GetFullPath ( initializer.CustomTypeImagePath4 ) ).AbsoluteUri;
-				case NotifyType.CustomType5: return new Uri ( Path.GetFullPath ( initializer.CustomTypeImagePath5 ) ).AbsoluteUri;
-				case NotifyType.CustomType6: return new Uri ( Path.GetFullPath ( initializer.CustomTypeImagePath6 ) ).AbsoluteUri;
-				case NotifyType.CustomType7: return new Uri ( Path.GetFullPath ( initializer.CustomTypeImagePath7 ) ).AbsoluteUri;
-				case NotifyType.CustomType8: return new Uri ( Path.GetFullPath ( initializer.CustomTypeImagePath8 ) ).AbsoluteUri;
+				case NotifyType.Warning:
+					return initializer.WarningTypeImagePath != null ? new Uri ( Path.GetFullPath ( initializer.WarningTypeImagePath ) ).AbsoluteUri : null;
+				case NotifyType.Information:
+					return initializer.InformationTypeImagePath != null ? new Uri ( Path.GetFullPath ( initializer.InformationTypeImagePath ) ).AbsoluteUri : null;
+				case NotifyType.Error:
+					return initializer.ErrorTypeImagePath != null ? new Uri ( Path.GetFullPath ( initializer.ErrorTypeImagePath ) ).AbsoluteUri : null;
+				case NotifyType.CustomType1:
+					return initializer.CustomTypeImagePath1 != null ? new Uri ( Path.GetFullPath ( initializer.CustomTypeImagePath1 ) ).AbsoluteUri : null;
+				case NotifyType.CustomType2:
+					return initializer.CustomTypeImagePath2 != null ? new Uri ( Path.GetFullPath ( initializer.CustomTypeImagePath2 ) ).AbsoluteUri : null;
+				case NotifyType.CustomType3:
+					return initializer.CustomTypeImagePath3 != null ? new Uri ( Path.GetFullPath ( initializer.CustomTypeImagePath3 ) ).AbsoluteUri : null;
+				case NotifyType.CustomType4:
+					return initializer.CustomTypeImagePath4 != null ? new Uri ( Path.GetFullPath ( initializer.CustomTypeImagePath4 ) ).AbsoluteUri : null;
+				case NotifyType.CustomType5:
+					return initializer.CustomTypeImagePath5 != null ? new Uri ( Path.GetFullPath ( initializer.CustomTypeImagePath5 ) ).AbsoluteUri : null;
+				case NotifyType.CustomType6:
+					return initializer.CustomTypeImagePath6 != null ? new Uri ( Path.GetFullPath ( initializer.CustomTypeImagePath6 ) ).AbsoluteUri : null;
+				case NotifyType.CustomType7:
+					return initializer.CustomTypeImagePath7 != null ? new Uri ( Path.GetFullPath ( initializer.CustomTypeImagePath7 ) ).AbsoluteUri : null;
+				case NotifyType.CustomType8:
+					return initializer.CustomTypeImagePath8 != null ? new Uri ( Path.GetFullPath ( initializer.CustomTypeImagePath8 ) ).AbsoluteUri : null;
 				default: return null;
 			}
 		}
@@ -173,7 +184,7 @@ namespace Daramee.DaramCommonLib
 
 		public static void Initialize ( NotificatorInitializer initializer )
 		{
-			if ( Environment.OSVersion.Version.Major >= 8 && ( Environment.OSVersion.Version.Major == 8 && Environment.OSVersion.Version.Minor == 1 ) )
+			if ( Environment.OSVersion.Version.Major >= 10 || ( Environment.OSVersion.Version.Major == 8 && Environment.OSVersion.Version.Minor == 1 ) )
 				Notificator = new Win8Notificator ( initializer );
 			else
 				Notificator = new LegacyNotificator ( initializer );
