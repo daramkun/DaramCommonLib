@@ -106,6 +106,7 @@ namespace Daramee.DaramCommonLib
 
 	public sealed class Win8Notificator : INotificator
 	{
+		ToastNotifier notifier;
 		NotificatorInitializer initializer;
 
 		public bool IsEnabledNotification { get; set; } = true;
@@ -115,6 +116,7 @@ namespace Daramee.DaramCommonLib
 		public Win8Notificator ( NotificatorInitializer initializer )
 		{
 			this.initializer = initializer;
+			notifier = ToastNotificationManager.CreateToastNotifier ( initializer.Title );
 		}
 
 		public void Dispose ()
@@ -144,7 +146,7 @@ namespace Daramee.DaramCommonLib
 			};
 			toast.Activated += ( sender, e ) => { Clicked?.Invoke ( this, EventArgs.Empty ); };
 
-			ToastNotificationManager.CreateToastNotifier ( initializer.Title ).Show ( toast );
+			notifier.Show ( toast );
 		}
 
 		private string GetIconPath ( NotifyType type )
