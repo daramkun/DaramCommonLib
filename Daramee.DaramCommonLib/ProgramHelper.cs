@@ -12,7 +12,7 @@ namespace Daramee.DaramCommonLib
 		public static Assembly ApplicationAssembly { get; private set; }
 		public static Version ApplicationVersion => ApplicationAssembly.GetName ().Version;
 		public static string ApplicationName => ApplicationAssembly.GetName ().Name;
-		public static string ApplicationNamespace => ApplicationAssembly.FullName;
+		public static string ApplicationNamespace => ApplicationAssembly.EntryPoint.DeclaringType.Namespace;
 		public static string GitHubAuthor { get; private set; }
 		public static string GitHubRepositoryName { get; private set; }
 

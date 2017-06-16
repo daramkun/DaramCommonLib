@@ -42,6 +42,9 @@ namespace Daramee.DaramCommonLib
 		CultureInfo [] cultureInfos;
 		Dictionary<CultureInfo, LocalizeCulture> Cultures = new Dictionary<CultureInfo, LocalizeCulture> ();
 
+		public static Localizer SharedLocalizer { get; private set; }
+		public static Dictionary<string,string> SharedStrings { get { return SharedLocalizer.Strings; } }
+
 		public CultureInfo CurrentCulture
 		{
 			get { return CultureInfo.CurrentUICulture; }
@@ -50,8 +53,10 @@ namespace Daramee.DaramCommonLib
 		public CultureInfo [] AvailableCultures { get { return cultureInfos; } }
 		public Dictionary<string, string> Strings { get { return Culture.Contents; } }
 
-		public Localizer ( Stream customLocalizationStream = null )
+		public Localizer ()
 		{
+			SharedLocalizer = this;
+
 			var json = new JsonSerializer ( typeof ( LocalizeCulture ), new JsonSerializerSettings () { UseSimpleDictionaryFormat = true } );
 			var json2 = new JsonSerializer ( typeof ( LocalizationContainer ), new JsonSerializerSettings () { UseSimpleDictionaryFormat = true } );
 
@@ -59,11 +64,11 @@ namespace Daramee.DaramCommonLib
 
 			foreach ( var ci in CultureInfo.GetCultures ( CultureTypes.InstalledWin32Cultures ) )
 			{
-				var globalizationFiles = new string [] {
+				var localizationFiles = new string [] {
 					$"Localization\\Localization.{ProgramHelper.ApplicationName}.{ci}.json",
 					$"Localization.{ProgramHelper.ApplicationName}.{ci}.json",
 				};
-				foreach ( var globalizationFile in globalizationFiles )
+				foreach ( var globalizationFile in localizationFiles )
 				{
 					Stream gs = null;
 					if ( File.Exists ( globalizationFile ) )
@@ -78,11 +83,11 @@ namespace Daramee.DaramCommonLib
 				}
 			}
 
-			var globalizationContainerFiles = new string [] {
+			var localizationContainerFiles = new string [] {
 				$"Localization\\Localization.{ProgramHelper.ApplicationName}.json",
 				$"Localization.{ProgramHelper.ApplicationName}.json",
 			};
-			foreach ( var globalizationContainerFile in globalizationContainerFiles )
+			foreach ( var globalizationContainerFile in localizationContainerFiles )
 			{
 				Stream gs2 = null;
 				if ( File.Exists ( globalizationContainerFile ) )
