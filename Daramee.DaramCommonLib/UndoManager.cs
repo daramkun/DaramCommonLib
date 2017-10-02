@@ -1,40 +1,53 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Daramee.DaramCommonLib
 {
-	public class UndoManager<T> where T : class, ICloneable
+	public class UndoManager<T> where T : class
 	{
-		Stack<T> undoStack = new Stack<T> ();
-		Stack<T> redoStack = new Stack<T> ();
+		BinaryFormatter bf = new BinaryFormatter ();
+		Stack<byte []> undoStack = new Stack<byte []> ();
+		Stack<byte []> redoStack = new Stack<byte []> ();
 
 		public bool IsUndoStackEmpty { get { return undoStack.Count == 0; } }
 		public bool IsRedoStackEmpty { get { return redoStack.Count == 0; } }
 
-		public void SaveToUndoStack ( T obj )
+		public void SaveToUndoStack ( T fileInfoCollection )
 		{
-			undoStack.Push ( obj.Clone () as T );
+			using ( MemoryStream memStream = new MemoryStream () )
+			{
+				bf.Serialize ( memStream, fileInfoCollection );
+				undoStack.Push ( memStream.ToArray () );
+			}
 			ClearRedoStack ();
 		}
 
-		public void SaveToRedoStack ( T obj )
+		public void SaveToRedoStack ( T fileInfoCollection )
 		{
-			redoStack.Push ( obj.Clone () as T );
+			using ( MemoryStream memStream = new MemoryStream () )
+			{
+				bf.Serialize ( memStream, fileInfoCollection );
+				redoStack.Push ( memStream.ToArray () );
+			}
 		}
 
 		public T LoadFromUndoStack ()
 		{
 			if ( IsUndoStackEmpty ) return null;
-			return undoStack.Pop ();
+			using ( MemoryStream memStream = new MemoryStream ( undoStack.Pop () ) )
+				return bf.Deserialize ( memStream ) as T;
 		}
 
 		public T LoadFromRedoStack ()
 		{
 			if ( IsRedoStackEmpty ) return null;
-			return redoStack.Pop ();
+			using ( MemoryStream memStream = new MemoryStream ( redoStack.Pop () ) )
+				return bf.Deserialize ( memStream ) as T;
 		}
 
 		public void ClearUndoStack () { undoStack.Clear (); }

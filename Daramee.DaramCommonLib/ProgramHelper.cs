@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -13,6 +14,8 @@ namespace Daramee.DaramCommonLib
 		public static Version ApplicationVersion => ApplicationAssembly.GetName ().Version;
 		public static string ApplicationName => ApplicationAssembly.GetName ().Name;
 		public static string ApplicationNamespace => ApplicationAssembly.EntryPoint.DeclaringType.Namespace;
+		public static Guid ApplicationGUID => ApplicationAssembly.GetType ().GUID;
+		public static string ApplicationPath => Process.GetCurrentProcess ().MainModule.FileName;
 		public static string GitHubAuthor { get; private set; }
 		public static string GitHubRepositoryName { get; private set; }
 

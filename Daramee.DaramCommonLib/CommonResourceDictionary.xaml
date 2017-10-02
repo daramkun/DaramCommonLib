@@ -1,14 +1,6 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:system="clr-namespace:System;assembly=mscorlib">
-    <Style x:Key="ToolBarButtonImageStyle" TargetType="Image">
-        <Style.Triggers>
-            <Trigger Property="IsEnabled" Value="False">
-                <Setter Property="Opacity" Value="0.5" />
-            </Trigger>
-        </Style.Triggers>
-    </Style>
-
     <Style x:Key="ButtonStyle" TargetType="{x:Type Button}">
         <Setter Property="Background" Value="WhiteSmoke" />
         <Setter Property="Foreground" Value="DarkSlateGray" />

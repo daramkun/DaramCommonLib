@@ -21,6 +21,9 @@ namespace Daramee.DaramCommonLib
 
 	public sealed class Optionizer<T> where T : class
 	{
+		public static Optionizer<T> SharedOptionizer { get; private set; }
+		public static T SharedOptions { get { return SharedOptionizer.Options; } }
+
 		JsonSerializer serializer = new JsonSerializer ( typeof ( T ), new JsonSerializerSettings () { UseSimpleDictionaryFormat = true } );
 
 		string _ownAuthor, _ownTitle;
@@ -30,6 +33,8 @@ namespace Daramee.DaramCommonLib
 		
 		public Optionizer ( string ownAuthor, string ownTitle )
 		{
+			SharedOptionizer = this;
+
 			_ownAuthor = ownAuthor;
 			_ownTitle = ownTitle;
 
@@ -38,7 +43,10 @@ namespace Daramee.DaramCommonLib
 				IsSaveToRegistry = false;
 
 				using ( Stream stream = File.Open ( $"{ownTitle}.config.json", FileMode.Open ) )
-					Options = serializer.ReadObject ( stream ) as T;
+				{
+					if ( stream.Length != 0 )
+						Options = serializer.ReadObject ( stream ) as T;
+				}
 			}
 			else
 			{

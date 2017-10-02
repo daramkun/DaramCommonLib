@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Microsoft.Win32;
 using Windows.Data.Xml.Dom;
 using Windows.UI.Notifications;
 
@@ -30,6 +31,8 @@ namespace Daramee.DaramCommonLib
 
 	public struct NotificatorInitializer
 	{
+		public string AppId;
+
 		public string Title;
 		public Icon Icon;
 
@@ -117,6 +120,12 @@ namespace Daramee.DaramCommonLib
 		{
 			this.initializer = initializer;
 			notifier = ToastNotificationManager.CreateToastNotifier ( initializer.Title );
+
+
+			
+			var regStr = $"SOFTWARE\\Classes\\CLSID\\{{{ProgramHelper.ApplicationGUID}}}\\LocalServer32";
+			var key = Registry.CurrentUser.CreateSubKey ( regStr );
+			key.SetValue ( null, ProgramHelper.ApplicationPath );
 		}
 
 		public void Dispose ()
