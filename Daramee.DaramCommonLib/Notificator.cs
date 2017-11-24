@@ -7,8 +7,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.Win32;
-using Windows.Data.Xml.Dom;
-using Windows.UI.Notifications;
+//using Windows.Data.Xml.Dom;
+//using Windows.UI.Notifications;
 
 namespace Daramee.DaramCommonLib
 {
@@ -49,6 +49,8 @@ namespace Daramee.DaramCommonLib
 		public string CustomTypeImagePath6;
 		public string CustomTypeImagePath7;
 		public string CustomTypeImagePath8;
+
+		public bool ForceLegacy;
 	}
 
 	public interface INotificator : IDisposable
@@ -83,6 +85,7 @@ namespace Daramee.DaramCommonLib
 
 		public void Dispose ()
 		{
+			notifyIcon.Visible = false;
 			notifyIcon.Dispose ();
 		}
 
@@ -107,7 +110,7 @@ namespace Daramee.DaramCommonLib
 		}
 	}
 
-	public sealed class Win8Notificator : INotificator
+	/*public sealed class Win8Notificator : INotificator
 	{
 		ToastNotifier notifier;
 		NotificatorInitializer initializer;
@@ -187,7 +190,7 @@ namespace Daramee.DaramCommonLib
 				default: return null;
 			}
 		}
-	}
+	}*/
 
 	public class NotificatorManager
 	{
@@ -195,9 +198,12 @@ namespace Daramee.DaramCommonLib
 
 		public static void Initialize ( NotificatorInitializer initializer )
 		{
-			if ( Environment.OSVersion.Version.Major >= 10 || ( Environment.OSVersion.Version.Major == 8 && Environment.OSVersion.Version.Minor == 1 ) )
+			/*if (
+				( Environment.OSVersion.Version.Major >= 10 || ( Environment.OSVersion.Version.Major == 8 && Environment.OSVersion.Version.Minor == 1 ) ) &&
+				!initializer.ForceLegacy
+				)
 				Notificator = new Win8Notificator ( initializer );
-			else
+			else*/
 				Notificator = new LegacyNotificator ( initializer );
 		}
 

@@ -38,11 +38,11 @@ namespace Daramee.DaramCommonLib
 			_ownAuthor = ownAuthor;
 			_ownTitle = ownTitle;
 
-			if ( File.Exists ( $"{ownTitle}.config.json" ) )
+			if ( File.Exists ( $"{AppDomain.CurrentDomain.BaseDirectory}\\{ownTitle}.config.json" ) )
 			{
 				IsSaveToRegistry = false;
 
-				using ( Stream stream = File.Open ( $"{ownTitle}.config.json", FileMode.Open ) )
+				using ( Stream stream = File.Open ( $"{AppDomain.CurrentDomain.BaseDirectory}\\{ownTitle}.config.json", FileMode.Open ) )
 				{
 					if ( stream.Length != 0 )
 						Options = serializer.ReadObject ( stream ) as T;
@@ -95,7 +95,8 @@ namespace Daramee.DaramCommonLib
 		{
 			if ( IsSaveToRegistry )
 			{
-				if ( File.Exists ( $"{_ownTitle}.config.json" ) ) File.Delete ( $"{_ownTitle}.config.json" );
+				if ( File.Exists ( $"{AppDomain.CurrentDomain.BaseDirectory}\\{_ownTitle}.config.json" ) )
+					File.Delete ( $"{AppDomain.CurrentDomain.BaseDirectory}\\{_ownTitle}.config.json" );
 
 				var userKey = Registry.CurrentUser;
 				var swKey = userKey.OpenSubKey ( "SOFTWARE", true );
@@ -141,7 +142,7 @@ namespace Daramee.DaramCommonLib
 						daramworldKey.DeleteSubKey ( _ownTitle, true );
 				}
 
-				using ( Stream stream = File.Open ( $"{_ownTitle}.config.json", FileMode.Create ) )
+				using ( Stream stream = File.Open ( $"{AppDomain.CurrentDomain.BaseDirectory}\\{_ownTitle}.config.json", FileMode.Create ) )
 					serializer.WriteObject ( stream, Options );
 			}
 		}
