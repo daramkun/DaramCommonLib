@@ -29,9 +29,12 @@ namespace Daramee.DaramCommonLib
 					continue;
 
 				// discard virtual cards (virtual box, virtual pc, etc.)
-				if ( ( ni.Description.IndexOf ( "virtual", StringComparison.OrdinalIgnoreCase ) >= 0 ) ||
-					( ni.Name.IndexOf ( "virtual", StringComparison.OrdinalIgnoreCase ) >= 0 ) )
-					continue;
+				if ( ContainsString ( ni, "virtual" ) )
+					if ( !( ContainsString ( ni, "Intel" )
+						|| ContainsString ( ni, "Realtek" )
+						|| ContainsString ( ni, "Killer" )
+						|| ContainsString ( ni, "Broadcom" ) ) )
+						continue;
 
 				// discard "Microsoft Loopback Adapter", it will not show as NetworkInterfaceType.Loopback but as Ethernet Card.
 				if ( ni.Description.Equals ( "Microsoft Loopback Adapter", StringComparison.OrdinalIgnoreCase ) )
@@ -40,6 +43,11 @@ namespace Daramee.DaramCommonLib
 				return true;
 			}
 			return false;
+		}
+
+		private static bool ContainsString ( NetworkInterface ni, string str, StringComparison comparison = StringComparison.OrdinalIgnoreCase )
+		{
+			return ( ni.Description.IndexOf ( str, comparison ) >= 0 ) || ( ni.Name.IndexOf ( str, comparison ) >= 0 );
 		}
 	}
 }
