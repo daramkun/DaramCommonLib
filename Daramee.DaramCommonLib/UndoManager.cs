@@ -8,8 +8,10 @@ using System.Threading.Tasks;
 
 namespace Daramee.DaramCommonLib
 {
+	[Serializable]
 	public class UndoManager<T> where T : class
 	{
+		[NonSerialized]
 		BinaryFormatter bf = new BinaryFormatter ();
 		Stack<byte []> undoStack = new Stack<byte []> ();
 		Stack<byte []> redoStack = new Stack<byte []> ();
@@ -48,6 +50,30 @@ namespace Daramee.DaramCommonLib
 			if ( IsRedoStackEmpty ) return null;
 			using ( MemoryStream memStream = new MemoryStream ( redoStack.Pop () ) )
 				return bf.Deserialize ( memStream ) as T;
+		}
+
+		public void Backup ()
+		{
+			using ( Stream backupFile = new FileStream ( "crashed_backup.dat", FileMode.Create, FileAccess.Write ) )
+			{
+				bf.Serialize ( backupFile, this );
+			}
+		}
+
+		public static UndoManager<T> Restore ()
+		{
+			if ( !File.Exists ( "crashed_backup.dat" ) )
+				return null;
+
+			BinaryFormatter bf = new BinaryFormatter ();
+			UndoManager<T> ret;
+			using ( Stream backupFile = new FileStream ( "crashed_backup.dat", FileMode.Open, FileAccess.Read ) )
+			{
+				ret = bf.Deserialize ( backupFile ) as UndoManager<T>;
+			}
+
+			File.Delete ( "crashed_backup.dat" );
+			return ret;
 		}
 
 		public void ClearUndoStack () { undoStack.Clear (); }
