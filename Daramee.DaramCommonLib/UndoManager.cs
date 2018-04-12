@@ -67,11 +67,15 @@ namespace Daramee.DaramCommonLib
 
 			BinaryFormatter bf = new BinaryFormatter ();
 			UndoManager<T> ret;
-			using ( Stream backupFile = new FileStream ( "crashed_backup.dat", FileMode.Open, FileAccess.Read ) )
+			try
 			{
-				ret = bf.Deserialize ( backupFile ) as UndoManager<T>;
+				using ( Stream backupFile = new FileStream ( "crashed_backup.dat", FileMode.Open, FileAccess.Read ) )
+				{
+					ret = bf.Deserialize ( backupFile ) as UndoManager<T>;
+				}
+				ret.bf = new BinaryFormatter ();
 			}
-
+			catch { ret = null; }
 			File.Delete ( "crashed_backup.dat" );
 			return ret;
 		}

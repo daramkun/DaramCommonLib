@@ -43,7 +43,7 @@ namespace Daramee.DaramCommonLib
 		Dictionary<CultureInfo, LocalizeCulture> Cultures = new Dictionary<CultureInfo, LocalizeCulture> ();
 
 		public static Localizer SharedLocalizer { get; private set; }
-		public static Dictionary<string,string> SharedStrings { get { return SharedLocalizer.Strings; } }
+		public static Dictionary<string,string> SharedStrings { get { return SharedLocalizer?.Strings; } }
 
 		public CultureInfo CurrentCulture
 		{

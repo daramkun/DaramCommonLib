@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,7 +11,7 @@ namespace Daramee.DaramCommonLib
 {
 	public static class ImageSourceHelper
 	{
-		public static BitmapSource GetClipboardImage ()
+		public static BitmapSource GetClipboardImage ( bool containsAlpha = false )
 		{
 			BitmapSource bitmapSource = null;
 
@@ -23,13 +24,23 @@ namespace Daramee.DaramCommonLib
 					return null;
 				bitmapSource = GetImageFromFile ( fileDropList [ 0 ] );
 			}
+			else if ( Clipboard.ContainsText () )
+			{
+				string text = Clipboard.GetText ();
+				if ( !File.Exists ( text ) )
+					return null;
+				bitmapSource = GetImageFromFile ( text );
+			}
 			else
 				return null;
 
 			if ( bitmapSource == null )
 				return null;
 
-			bitmapSource = new FormatConvertedBitmap ( bitmapSource, System.Windows.Media.PixelFormats.Bgr24, null, 0 );
+			bitmapSource = new FormatConvertedBitmap ( bitmapSource,
+				containsAlpha
+				? System.Windows.Media.PixelFormats.Bgra32
+				: System.Windows.Media.PixelFormats.Bgr24, null, 0 );
 			bitmapSource.Freeze ();
 
 			return bitmapSource;
