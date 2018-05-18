@@ -6,8 +6,19 @@ using System.Threading.Tasks;
 
 namespace Daramee.DaramCommonLib
 {
-	public static class ParallelSort
+	public static class Sort
 	{
+		public static void Quicksort<T> ( IList<T> arr ) where T : IComparable<T> { Quicksort<T> ( arr, 0, arr.Count - 1 ); }
+		private static void Quicksort<T> ( IList<T> arr, int left, int right ) where T : IComparable<T>
+		{
+			if ( right > left )
+			{
+				int pivot = Partition ( arr, left, right );
+				Quicksort ( arr, left, pivot - 1 );
+				Quicksort ( arr, pivot + 1, right );
+			}
+		}
+
 		public static void QuicksortParallel<T> ( IList<T> arr ) where T : IComparable<T> { QuicksortParallel ( arr, 0, arr.Count - 1 ); }
 		private static void QuicksortParallel<T> ( IList<T> arr, int left, int right ) where T : IComparable<T>
 		{

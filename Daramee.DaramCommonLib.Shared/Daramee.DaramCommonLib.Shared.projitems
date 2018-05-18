@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>7c78e361-8d16-47c6-a81a-d1f883707ee5</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>Daramee.DaramCommonLib.Shared</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Converters\BooleanInvertConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Converters\ImageToBitmapSourceConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)FilesHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ImageSourceHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Localizer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LogHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NetworkHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Notificator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Optionizer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ProgramHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Sort.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)StandardDispose.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UndoManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UpdateChecker.cs" />
+  </ItemGroup>
+</Project>

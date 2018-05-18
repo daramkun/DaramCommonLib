@@ -39,7 +39,6 @@ namespace Daramee.DaramCommonLib
 
 	public class Localizer
 	{
-		CultureInfo [] cultureInfos;
 		Dictionary<CultureInfo, LocalizeCulture> Cultures = new Dictionary<CultureInfo, LocalizeCulture> ();
 
 		public static Localizer SharedLocalizer { get; private set; }
@@ -50,7 +49,7 @@ namespace Daramee.DaramCommonLib
 			get { return CultureInfo.CurrentUICulture; }
 		}
 		public LocalizeCulture Culture { get; private set; }
-		public CultureInfo [] AvailableCultures { get { return cultureInfos; } }
+		public CultureInfo [] AvailableCultures { get; private set; }
 		public Dictionary<string, string> Strings { get { return Culture.Contents; } }
 
 		public Localizer ()
@@ -123,9 +122,9 @@ namespace Daramee.DaramCommonLib
 			}
 
 			int i = 0;
-			cultureInfos = new CultureInfo [ Cultures.Count ];
+			AvailableCultures = new CultureInfo [ Cultures.Count ];
 			foreach ( var key in Cultures.Keys )
-				cultureInfos [ i++ ] = key;
+				AvailableCultures [ i++ ] = key;
 
 			Refresh ();
 		}

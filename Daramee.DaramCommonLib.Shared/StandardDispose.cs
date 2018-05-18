@@ -15,8 +15,7 @@ namespace Daramee.DaramCommonLib
 		public virtual void Dispose ()
 		{
 			if ( IsAlreadyDisposed )
-				return;
-
+				throw new ObjectDisposedException ( GetType ().FullName );
 			Dispose ( true );
 			GC.SuppressFinalize ( this );
 		}

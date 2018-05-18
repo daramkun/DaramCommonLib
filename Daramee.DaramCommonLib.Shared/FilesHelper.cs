@@ -9,7 +9,6 @@ namespace Daramee.DaramCommonLib
 {
 	public static class FilesHelper
 	{
-
 		public static char GetInvalidToValid ( char ch )
 		{
 			switch ( ch )
@@ -23,6 +22,8 @@ namespace Daramee.DaramCommonLib
 				case '|': return '｜';
 				case ':': return '：';
 				case '"': return '＂';
+				case '%': return '％';
+				case '.': return '．';
 				default: return ch;
 			}
 		}
@@ -35,6 +36,16 @@ namespace Daramee.DaramCommonLib
 					path = path.Replace ( ch, GetInvalidToValid ( ch ) );
 			}
 			return path;
+		}
+
+		public static string ReplaceInvalidFilenameCharacters ( string filename )
+		{
+			foreach ( var ch in Path.GetInvalidFileNameChars () )
+			{
+				if ( filename.IndexOf ( ch ) < 0 )
+					filename = filename.Replace ( ch, GetInvalidToValid ( ch ) );
+			}
+			return filename;
 		}
 	}
 }
