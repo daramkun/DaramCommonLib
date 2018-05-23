@@ -35,8 +35,6 @@ namespace Daramee.DaramCommonLib
 				ClearRedoStack ();
 
 			UpdateUndo?.Invoke ( this, EventArgs.Empty );
-
-			Debug.WriteLine ( "[Debug] SaveToUndoStack ()\nCaller name: {0}({1})\nUndo stacks: {2}\nRedo stacks: {3}\n", caller, line, undoStack.Count, redoStack.Count );
 		}
 
 		public void SaveToRedoStack ( T fileInfoCollection, [CallerMemberName] string caller = "", [CallerLineNumber] int line = 0 )
@@ -48,8 +46,6 @@ namespace Daramee.DaramCommonLib
 			}
 
 			UpdateRedo?.Invoke ( this, EventArgs.Empty );
-
-			Debug.WriteLine ( "[Debug] SaveToRedoStack ()\nCaller name: {0}({1})\nUndo stacks: {2}\nRedo stacks: {3}\n", caller, line, undoStack.Count, redoStack.Count );
 		}
 
 		public T LoadFromUndoStack ()

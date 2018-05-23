@@ -13,7 +13,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Converters\ImageToBitmapSourceConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FilesHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ImageSourceHelper.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Localizer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LogHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NetworkHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Notificator.cs" />
@@ -21,6 +20,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)ProgramHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Sort.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)StandardDispose.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)StringTable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UndoManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UpdateChecker.cs" />
   </ItemGroup>
