@@ -63,6 +63,7 @@ namespace Daramee.DaramCommonLib
 
 		public Dictionary<string, string> this [ CultureInfo cultureInfo ] => tables [ cultureInfo ];
 
+#pragma warning disable CS0649
 		[DataContract]
 		private class IOContract
 		{
@@ -89,6 +90,7 @@ namespace Daramee.DaramCommonLib
 			[DataMember ( Name = "languages" )]
 			public List<Language> Languages;
 		}
+#pragma warning restore CS0649
 
 		public StringTable ()
 		{

@@ -6,7 +6,7 @@
     <SharedGUID>7c78e361-8d16-47c6-a81a-d1f883707ee5</SharedGUID>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">
-    <Import_RootNamespace>Daramee.DaramCommonLib.Shared</Import_RootNamespace>
+    <Import_RootNamespace>Daramee.DaramCommonLib</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Converters\BooleanInvertConverter.cs" />
