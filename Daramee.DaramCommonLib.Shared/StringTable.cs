@@ -13,7 +13,7 @@ namespace Daramee.DaramCommonLib
 	public sealed class StringTable
 	{
 		public static StringTable SharedTable { get; private set; }
-		public static Dictionary<string, string> SharedStrings => SharedTable.Strings;
+		public static Dictionary<string, string> SharedStrings => SharedTable?.Strings;
 		static DataContractJsonSerializer serializer = new DataContractJsonSerializer ( typeof ( IOContract ), new DataContractJsonSerializerSettings ()
 		{
 			UseSimpleDictionaryFormat = true,
@@ -27,15 +27,15 @@ namespace Daramee.DaramCommonLib
 		public string Copyright { get; private set; }
 		public string Contact { get; private set; }
 
-		public IEnumerable<CultureInfo> AvailableCultures => tables.Keys;
+		public IEnumerable<CultureInfo> AvailableCultures => tables?.Keys;
 		CultureInfo lastCultureInfo = CultureInfo.CurrentUICulture, cultureCache = CultureInfo.CurrentUICulture;
-		public Dictionary<string, string> Strings => tables [ cultureCache ];
+		public Dictionary<string, string> Strings => tables? [ CurrentCulture ];
 
 		public CultureInfo CurrentCulture
 		{
 			get
 			{
-				if ( lastCultureInfo != CultureInfo.CurrentUICulture )
+				if ( lastCultureInfo != CultureInfo.CurrentUICulture || !tables.Keys.Contains ( CultureInfo.CurrentUICulture ) )
 				{
 					if ( tables.ContainsKey ( CultureInfo.CurrentUICulture ) )
 						cultureCache = CultureInfo.CurrentUICulture;
@@ -53,15 +53,15 @@ namespace Daramee.DaramCommonLib
 						}
 
 						if ( !changed )
-							cultureCache = CultureInfo.CurrentUICulture;
+							cultureCache = tables.Keys.FirstOrDefault ();
 					}
-					lastCultureInfo = CultureInfo.CurrentUICulture;
+					lastCultureInfo = cultureCache;
 				}
 				return cultureCache;
 			}
 		}
 
-		public Dictionary<string, string> this [ CultureInfo cultureInfo ] => tables [ cultureInfo ];
+		public Dictionary<string, string> this [ CultureInfo cultureInfo ] => tables? [ cultureInfo ];
 
 #pragma warning disable CS0649
 		[DataContract]
@@ -145,7 +145,15 @@ namespace Daramee.DaramCommonLib
 			tables = new Dictionary<CultureInfo, Dictionary<string, string>> ();
 			foreach ( var table in contract.Languages )
 			{
-				tables.Add ( CultureInfo.GetCultureInfo ( table.LanguageRegion ), table.Table );
+				var targetTable = new Dictionary<string, string> ( table.Table );
+				foreach ( var item in table.Table )
+				{
+					if ( item.Value.IndexOf ( "\\n" ) >= 0 )
+					{
+						targetTable [ item.Key ] = item.Value.Replace ( "\\n", "\n" );
+					}
+				}
+				tables.Add ( CultureInfo.GetCultureInfo ( table.LanguageRegion ), targetTable );
 			}
 		}
 	}

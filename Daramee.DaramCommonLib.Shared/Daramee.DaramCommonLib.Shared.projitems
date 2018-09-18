@@ -23,5 +23,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)StringTable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UndoManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UpdateChecker.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WindowUtility.cs" />
   </ItemGroup>
 </Project>
