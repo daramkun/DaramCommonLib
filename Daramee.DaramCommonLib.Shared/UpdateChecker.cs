@@ -52,14 +52,17 @@ namespace Daramee.DaramCommonLib
 					stream = null;
 					string text = reader.ReadToEnd ();
 
-					int begin = text.IndexOf ( "<span class=\"css-truncate-target\">" );
+					/*int begin = text.IndexOf ( "<span class=\"css-truncate-target\">" );
 					if ( begin == -1 ) { return null; }
 					else begin += "<span class=\"css-truncate-target\">".Length;
 
 					int end = text.IndexOf ( "</span>", begin );
-					if ( end == -1 ) { return null; };
+					if ( end == -1 ) { return null; };*/
+					var match = Regex.Match ( text, "<div class=\"f1 flex-auto min-width-0 text-normal\">[ \t\r\n]*<a href=\"/daramkun/DaramRenamer/releases/tag/[0-9.]+\">[ \t\r\n]*([0-9.]+)[ \t\r\n]*</a>[ \t\r\n]*</div>" );
 
-					return newestVersion = text.Substring ( begin, end - begin );
+
+					//return newestVersion = text.Substring ( begin, end - begin );
+					return newestVersion = match.Groups.Count > 1 ? match.Groups [ 1 ].Value : null;
 				}
 			}
 			catch { return newestVersion = null; }
