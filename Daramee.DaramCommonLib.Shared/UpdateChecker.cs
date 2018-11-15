@@ -33,7 +33,7 @@ namespace Daramee.DaramCommonLib
 			}
 		}
 
-		public async Task<string> GetNewestVersion ( bool forceCheck = false, string updateUrl = null )
+		public async Task<string> GetNewestVersion ( bool forceCheck = false )
 		{
 			if ( newestVersion != null && !forceCheck )
 				return newestVersion;
@@ -41,7 +41,7 @@ namespace Daramee.DaramCommonLib
 			Stream stream = null;
 			try
 			{
-				HttpWebRequest req = WebRequest.CreateHttp ( updateUrl ?? UpdateURL );
+				HttpWebRequest req = WebRequest.CreateHttp ( UpdateURL );
 				req.Proxy = null;
 
 				HttpWebResponse res = await req.GetResponseAsync () as HttpWebResponse;
@@ -58,16 +58,11 @@ namespace Daramee.DaramCommonLib
 
 					int end = text.IndexOf ( "</span>", begin );
 					if ( end == -1 ) { return null; };*/
-					var match = Regex.Match ( text,
-						updateUrl == null
-						? "<div class=\"f1 flex-auto min-width-0 text-normal\">[ \t\r\n]*<a href=\"/daramkun/DaramRenamer/releases/tag/[0-9.]+\">[ \t\r\n]*([0-9.]+)[ \t\r\n]*</a>[ \t\r\n]*</div>"
-						: "\\[assembly: AssemblyVersion \\( \"([0-9].[0-9].[0-9].[0-9])\" \\)\\]" );
+					var match = Regex.Match ( text, $"<div class=\"f1 flex-auto min-width-0 text-normal\">[ \t\r\n]*<a href=\"\\/{ProgramHelper.GitHubAuthor}\\/{ProgramHelper.GitHubRepositoryName}\\/releases\\/tag\\/[0-9.a-zA-Z ]+\">[ \t\r\n]*([0-9.a-zA-Z ]+)[ \t\r\n]*<\\/a>[ \t\r\n]*<\\/div>" );
 
 					//return newestVersion = text.Substring ( begin, end - begin );
 					if ( match.Groups.Count > 1 )
 						return newestVersion = match.Groups [ 1 ].Value;
-					if ( updateUrl == null )
-						return await GetNewestVersion ( forceCheck, "https://raw.githubusercontent.com/daramkun/DaramRenamer/master/Daramkun.DaramRenamer/Properties/AssemblyInfo.cs" );
 					return null;
 				}
 			}
