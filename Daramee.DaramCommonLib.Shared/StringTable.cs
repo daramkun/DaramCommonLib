@@ -10,6 +10,20 @@ using System.Text.RegularExpressions;
 
 namespace Daramee.DaramCommonLib
 {
+	public sealed class AuthorInfo
+	{
+		public string Author { get; private set; }
+		public string Copyright { get; private set; }
+		public string Contact { get; private set; }
+
+		public AuthorInfo ( string author, string copyright, string contact )
+		{
+			Author = author;
+			Copyright = copyright;
+			Contact = contact;
+		}
+	}
+
 	public sealed class StringTable
 	{
 		public static StringTable SharedTable { get; private set; }
@@ -23,13 +37,12 @@ namespace Daramee.DaramCommonLib
 
 		public string TargetApp { get; private set; }
 		public string TargetVersion { get; private set; }
-		public string Author { get; private set; }
-		public string Copyright { get; private set; }
-		public string Contact { get; private set; }
 
 		public IEnumerable<CultureInfo> AvailableCultures => tables?.Keys;
+		public Dictionary<CultureInfo, AuthorInfo> AuthorInformations { get; private set; } = new Dictionary<CultureInfo, AuthorInfo> ();
 		CultureInfo lastCultureInfo = CultureInfo.CurrentUICulture, cultureCache = CultureInfo.CurrentUICulture;
 		public Dictionary<string, string> Strings => tables? [ CurrentCulture ];
+		public AuthorInfo Author => AuthorInformations [ CurrentCulture ];
 
 		public CultureInfo CurrentCulture
 		{
@@ -71,16 +84,16 @@ namespace Daramee.DaramCommonLib
 			public string TargetApp;
 			[DataMember ( Name = "version", IsRequired = false )]
 			public string TargetVersion;
-			[DataMember ( Name = "author", IsRequired = false )]
-			public string Author;
-			[DataMember ( Name = "copyright", IsRequired = false )]
-			public string Copyright;
-			[DataMember ( Name = "contact", IsRequired = false )]
-			public string Contact;
 
 			[DataContract]
 			public class Language
 			{
+				[DataMember ( Name = "author", IsRequired = false )]
+				public string Author;
+				[DataMember ( Name = "copyright", IsRequired = false )]
+				public string Copyright;
+				[DataMember ( Name = "contact", IsRequired = false )]
+				public string Contact;
 				[DataMember ( Name = "language" )]
 				public string LanguageRegion;
 				[DataMember ( Name = "table" )]
@@ -139,9 +152,6 @@ namespace Daramee.DaramCommonLib
 			IOContract contract = GetContract ( stream );
 			TargetApp = contract.TargetApp;
 			TargetVersion = contract.TargetVersion;
-			Author = contract.Author;
-			Copyright = contract.Copyright;
-			Contact = contract.Contact;
 			tables = new Dictionary<CultureInfo, Dictionary<string, string>> ();
 			foreach ( var table in contract.Languages )
 			{
@@ -153,7 +163,9 @@ namespace Daramee.DaramCommonLib
 						targetTable [ item.Key ] = item.Value.Replace ( "\\n", "\n" );
 					}
 				}
-				tables.Add ( CultureInfo.GetCultureInfo ( table.LanguageRegion ), targetTable );
+				var cultureInfo = CultureInfo.GetCultureInfo ( table.LanguageRegion );
+				tables.Add ( cultureInfo, targetTable );
+				AuthorInformations.Add ( cultureInfo, new AuthorInfo ( table.Author, table.Copyright, table.Contact ) );
 			}
 		}
 	}
