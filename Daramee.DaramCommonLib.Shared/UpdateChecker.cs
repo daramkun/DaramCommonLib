@@ -62,7 +62,7 @@ namespace Daramee.DaramCommonLib
 
 					//return newestVersion = text.Substring ( begin, end - begin );
 					if ( match.Groups.Count > 1 )
-						return newestVersion = match.Groups [ 1 ].Value;
+						return newestVersion = match.Groups [ 1 ].Value.Replace ( "Version", "" ).Trim ();
 					return null;
 				}
 			}
